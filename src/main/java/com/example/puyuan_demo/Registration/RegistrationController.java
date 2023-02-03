@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "api/v1/registration")
+@RequestMapping(path = "api/v1/auth")
 @AllArgsConstructor
 public class RegistrationController {
 
     private RegistrationService registrationService;
 
-    @PostMapping
+    @PostMapping("/registration")
     public String register(@RequestBody RegistrationRequest request){
         return registrationService.register(request);
     }
