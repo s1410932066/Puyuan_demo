@@ -1,8 +1,9 @@
 package com.example.puyuan_demo.Registration;
 
 
+import com.example.puyuan_demo.auth.AuthenticationResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +17,9 @@ public class RegistrationController {
     private RegistrationService registrationService;
 
     @PostMapping("/registration")
-    public String register(@RequestBody RegistrationRequest request){
-        return registrationService.register(request);
+    public ResponseEntity<AuthenticationResponse> register(
+            @RequestBody RegistrationRequest request
+    ){
+        return ResponseEntity.ok(registrationService.register(request));
     }
-
 }

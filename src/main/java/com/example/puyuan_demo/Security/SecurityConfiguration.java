@@ -22,17 +22,23 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
-                .csrf()
-                .disable()
+                //CSRF不啟用
+                .csrf().disable()
+                // 定義哪些url需要被保護
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                //除了這個位置的api外，其他都須得到身分驗證才可以進入
+                //此類型的API都是可以訪問的    permitAll()任何人都可以訪問
+                .requestMatchers(
+                    "/api/v1/auth/**",
+                    //顯示錯誤訊息
+                    "/error/**")
                 .permitAll()
-                .anyRequest()
-                .authenticated()
+                // 其他尚未匹配到的url都需要身份驗證
+                .anyRequest().authenticated()
                 .and()
                 .authenticationProvider(authenticationProvider)
+                // 添加過濾器，針對其他請求進行JWT的驗證
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
 
     }

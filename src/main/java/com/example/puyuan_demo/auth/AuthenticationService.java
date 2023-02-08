@@ -22,24 +22,6 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    /**
-     * 註冊資料存入
-     * @param request
-     * @return
-     */
-    public AuthenticationResponse register(RegisterRequest request) {
-        var user = AppUser.builder()
-                .account(request.getAccount())
-                .phone(request.getPhone())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .appUserRole(AppUserRole.USER)
-                .build();
-        repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
-    }
-
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

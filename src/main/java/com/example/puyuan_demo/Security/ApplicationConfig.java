@@ -20,16 +20,24 @@ public class ApplicationConfig {
 
     private final AppUserRepository appUserRepository;
 
+    //獲取資料庫裡的用戶
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> appUserRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                return appUserRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            }
+        };
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenProvider = new DaoAuthenticationProvider();
+        //查找用戶的詳細信息。
         authenProvider.setUserDetailsService(userDetailsService());
+        //加密密碼。
         authenProvider.setPasswordEncoder(passwordEncoder());
         return authenProvider;
     }

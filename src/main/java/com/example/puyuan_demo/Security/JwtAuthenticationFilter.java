@@ -19,12 +19,14 @@ import java.io.IOException;
 
 
 @Component
+//用於生成包含final 和@NonNull註解的成員變量的構造方法
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter { //確保身分認證操作請求只發生一次
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    //對請求進行檢查,確保請求的安全性
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -37,8 +39,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
+            //
             jwt = authHeader.substring(7);
-            userEmail = jwtService.extractUsername(jwt);
+            userEmail = jwtService. extractUsername(jwt);
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null ){
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 if (jwtService.isTokenValid(jwt, userDetails)){
